@@ -1,37 +1,22 @@
-# Welcome to Jekyll!
-#
-# This config file is meant for settings that affect your whole blog, values
-# which you are expected to set up once and rarely edit after that. If you find
-# yourself editing this file very often, consider using Jekyll's data files
-# feature for the data you need to update frequently.
-#
-# For technical reasons, this file is *NOT* reloaded automatically when you use
-# 'bundle exec jekyll serve'. If you change this file, please restart the server process.
-#
-# If you need help with YAML syntax, here are some quick references for you: 
-# https://learn-the-web.algonquindesign.ca/topics/markdown-yaml-cheat-sheet/#yaml
-# https://learnxinyminutes.com/docs/yaml/
-#
-# Site settings
-# These are used to personalize your new site. If you look in the HTML files,
-# you will see them accessed via {{ site.title }}, {{ site.email }}, and so on.
-# You can create any custom variable you would like, and they will be accessible
-# in the templates via {{ site.myvariable }}.
+title: Duda y Hallarás
+description: Simbolismo, misterio y conspiraciones
+lang: es
+author: dudayhallaras
+email: dudayhallaras@proton.me
 
-# URL is the base hostname with protocol for your site, eg http://example.com
-url: "" # the base hostname & protocol for your site, e.g. http://example.com
+# Dominio principal (tu sitio está alojado en GitHub Pages)
+url: "https://dudayhallaras.github.io"
+# Como NO estás usando una subcarpeta, esto va vacío:
+baseurl: ""  # NO pongas "/duda-y-hallaras"
 
-# If you want to install this jekyll in a subpath (eg /digitalgarden) set it here. 
-# Else keep it Empty (DON'T PUT /; Keep it empty)
-baseurl: ""
+# Encabezado y pie de página
+heading: Duda y hallarás
+content: Un espacio para buscadores de la verdad
 
-# Website Header, Description, Footer year and text. 
-# If you are deleting this, make sure you remove it from HTML files too 
-heading: Jekyll Garden # Change this 
-content: Obsidian ready Jekyll Theme
-copyright:  
-  year: © 2022
-  msg: Contents under CC-BY-NC 
+copyright:
+  year: © 2025
+  msg: "Duda y Hallarás. Todos los derechos reservados"
+
 
 # Set title and content for private & broken link tooltop
 privatelinks:
@@ -69,6 +54,9 @@ collections:
     notes:
       output: true
       permalink: /note/:title
+    podcast:
+      output: true
+      permalink: /podcast/:title
 
 markdown: kramdown
 
@@ -96,6 +84,13 @@ defaults:
     values:
       layout: Post
       content-type: notes
+  - scope:
+      path: ""
+      type: podcast
+    values:
+      layout: Post
+      content-type: podcast
+
 
 
 # Exclude from processing.

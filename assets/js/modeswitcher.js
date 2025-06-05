@@ -1,71 +1,67 @@
----
----
+let systemInitiatedDark = window.matchMedia("(prefers-color-scheme: dark)");
+let theme = localStorage.getItem('theme');
 
-/* 
-Copied from https://github.com/derekkedziora/jekyll-demo/blob/master/scripts/mode-switcher.js
-https://github.com/derekkedziora/jekyll-demo
-Creative Commons Attribution 4.0 International License
-*/
-
-let systemInitiatedDark = window.matchMedia("(prefers-color-scheme: dark)"); 
-let theme = sessionStorage.getItem('theme');
-
-const iconSun = "{{ site.baseurl }}/assets/img/sun.svg";
-const iconMoon = "{{ site.baseurl }}/assets/img/moon.svg";
-
+const iconSun = "/assets/img/sun.svg";
+const iconMoon = "/assets/img/moon.svg";
 
 function changeIconImgSrc(src) {
-	document.getElementById("theme-toggle-img").src = src;
-	document.getElementById("theme-toggle-img--mobile").src = src;
+	const iconDesktop = document.getElementById("theme-toggle-img");
+	const iconMobile = document.getElementById("theme-toggle-img--mobile");
+	if (iconDesktop) iconDesktop.src = src;
+	if (iconMobile) iconMobile.src = src;
 }
 
-if (systemInitiatedDark.matches) {
-	changeIconImgSrc(iconMoon);
-} else {
-	changeIconImgSrc(iconSun);
-}
-
-function prefersColorTest(systemInitiatedDark) {
-  if (systemInitiatedDark.matches) {
-  	document.documentElement.setAttribute('data-theme', 'dark');		
-   	changeIconImgSrc(iconMoon);
-   	sessionStorage.setItem('theme', '');
-  } else {
-  	document.documentElement.setAttribute('data-theme', 'light');
-    changeIconImgSrc(iconSun);
-    sessionStorage.setItem('theme', '');
-  }
-}
-systemInitiatedDark.addListener(prefersColorTest);
-
-
-function modeSwitcher() {
-	let theme = sessionStorage.getItem('theme');
+function applyTheme(theme) {
 	if (theme === "dark") {
-		document.documentElement.setAttribute('data-theme', 'light');
-		sessionStorage.setItem('theme', 'light');
-		changeIconImgSrc(iconSun);
-	}	else if (theme === "light") {
 		document.documentElement.setAttribute('data-theme', 'dark');
-		sessionStorage.setItem('theme', 'dark');
 		changeIconImgSrc(iconMoon);
-	} else if (systemInitiatedDark.matches) {	
-		document.documentElement.setAttribute('data-theme', 'light');
-		sessionStorage.setItem('theme', 'light');
-		changeIconImgSrc(iconSun);
 	} else {
-		document.documentElement.setAttribute('data-theme', 'dark');
-		sessionStorage.setItem('theme', 'dark');
-		changeIconImgSrc(iconMoon);
+		document.documentElement.setAttribute('data-theme', 'light');
+		changeIconImgSrc(iconSun);
 	}
 }
 
-if (theme === "dark") {
-	document.documentElement.setAttribute('data-theme', 'dark');
-	sessionStorage.setItem('theme', 'dark');
-	changeIconImgSrc(iconMoon);
-} else if (theme === "light") {
-	document.documentElement.setAttribute('data-theme', 'light');
-	sessionStorage.setItem('theme', 'light');
-	changeIconImgSrc(iconSun);
+// 1. Al cargar la página: aplica el tema guardado, o el del sistema si no hay ninguno
+if (theme === "dark" || theme === "light") {
+	applyTheme(theme);
+} else {
+	theme = systemInitiatedDark.matches ? "dark" : "light";
+	localStorage.setItem('theme', theme);
+	applyTheme(theme);
 }
+
+// 2. Cambios en la preferencia del sistema (sólo si el usuario no ha fijado uno manualmente)
+systemInitiatedDark.addEventListener("change", (e) => {
+	if (!localStorage.getItem('theme')) {
+		const newTheme = e.matches ? "dark" : "light";
+		applyTheme(newTheme);
+	}
+});
+
+// 3. Cambiar tema manualmente con el botón
+function modeSwitcher() {
+	let currentTheme = localStorage.getItem('theme') || (systemInitiatedDark.matches ? "dark" : "light");
+	let newTheme = currentTheme === "dark" ? "light" : "dark";
+	localStorage.setItem('theme', newTheme);
+	applyTheme(newTheme);
+}
+document.addEventListener("DOMContentLoaded", function () {
+	let storedTheme = localStorage.getItem("theme");
+
+	// Aplica el tema guardado o detectado
+	if (storedTheme === "dark" || storedTheme === "light") {
+		applyTheme(storedTheme);
+	} else {
+		let defaultTheme = systemInitiatedDark.matches ? "dark" : "light";
+		localStorage.setItem("theme", defaultTheme);
+		applyTheme(defaultTheme);
+	}
+
+	// Detecta cambio en preferencia del sistema (opcional)
+	systemInitiatedDark.addEventListener("change", (e) => {
+		if (!localStorage.getItem("theme")) {
+			const newTheme = e.matches ? "dark" : "light";
+			applyTheme(newTheme);
+		}
+	});
+});
